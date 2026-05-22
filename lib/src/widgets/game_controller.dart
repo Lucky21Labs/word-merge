@@ -6,7 +6,6 @@ import 'package:word_merge/src/logic/merge_logic.dart';
 import 'package:word_merge/src/logic/tile.dart';
 import 'package:word_merge/src/logic/score_manager.dart';
 import 'package:word_merge/src/logic/word_validator.dart';
-import 'package:word_merge/src/widgets/game_board.dart';
 
 /// Manages game state and orchestrates the merge logic.
 class GameController extends StatefulWidget {
@@ -26,7 +25,7 @@ class GameControllerState extends State<GameController> {
   int _score = 0;
   Position? _selectedPosition;
   bool _isProcessing = false;
-  
+
   // Word validation UI state
   String? _lastFormedWord;
   bool? _lastWordValid;
@@ -57,18 +56,16 @@ class GameControllerState extends State<GameController> {
     // Start with 6 random tiles (A-F range)
     final random = Random();
     final initialTiles = <Tile>[];
-    
+
     for (var i = 0; i < 6; i++) {
       final row = random.nextInt(BoardState.gridSize);
       final col = random.nextInt(BoardState.gridSize);
       final letterCode = random.nextInt(6) + 65; // A-F
-      initialTiles.add(Tile(
-        letter: String.fromCharCode(letterCode),
-        row: row,
-        column: col,
-      ));
+      initialTiles.add(
+        Tile(letter: String.fromCharCode(letterCode), row: row, column: col),
+      );
     }
-    
+
     _board = BoardState.fromTiles(initialTiles);
   }
 
@@ -140,16 +137,16 @@ class GameControllerState extends State<GameController> {
       // Get the letters involved in the merge for word validation
       final sourceTile = _board.getTile(sourcePos.row, sourcePos.column)!;
       final targetTile = _board.getTile(targetPos.row, targetPos.column)!;
-      
+
       // Form a "word" from the merge (source letter + target letter)
       final formedWord = sourceTile.letter + targetTile.letter;
-      
+
       // Validate the word
       final isValid = _wordValidator.isValidWord(formedWord);
-      
+
       // Calculate score for this word
       final wordScore = _scoreManager.calculateScore(formedWord.split(''));
-      
+
       setState(() {
         _board = result.newBoard;
         _score += wordScore;
@@ -209,7 +206,7 @@ class GameControllerState extends State<GameController> {
 
   bool _isGameOver() {
     if (!_board.isFull) return false;
-    
+
     // Check if any adjacent tiles can merge
     for (var row = 0; row < BoardState.gridSize; row++) {
       for (var col = 0; col < BoardState.gridSize; col++) {
@@ -220,20 +217,21 @@ class GameControllerState extends State<GameController> {
         for (var dr = -1; dr <= 1; dr++) {
           for (var dc = -1; dc <= 1; dc++) {
             if (dr == 0 && dc == 0) continue;
-            
+
             final adjacent = Position(row + dr, col + dc);
             final adjacentTile = _board.getTile(adjacent.row, adjacent.column);
-            
-            if (adjacentTile != null && 
+
+            if (adjacentTile != null &&
                 adjacentTile.letter == current.letter &&
-                !adjacentTile.locked && !current.locked) {
+                !adjacentTile.locked &&
+                !current.locked) {
               return false; // Can still merge
             }
           }
         }
       }
     }
-    
+
     return true; // Board full, no valid merges
   }
 

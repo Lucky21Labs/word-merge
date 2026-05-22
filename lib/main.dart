@@ -4,8 +4,8 @@ import 'src/widgets/game_board.dart';
 
 void main() {
   FlutterError.onError = (details) {
-    print('FlutterError: ${details.exception}');
-    if (details.stack != null) print('Stack: ${details.stack}');
+    debugPrint('FlutterError: ${details.exception}');
+    if (details.stack != null) debugPrint('Stack: ${details.stack}');
   };
   runApp(const WordMergeApp());
 }
@@ -92,8 +92,8 @@ class _GameBody extends StatelessWidget {
               Text(
                 'Score: ${controller.score}',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               if (controller.selectedPosition != null)
                 Container(

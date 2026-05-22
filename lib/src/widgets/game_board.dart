@@ -23,11 +23,13 @@ class GameBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     // Check if word feedback should be shown (within last 1.5 seconds)
-    final showFeedback = wordFeedbackTime != null &&
+    final showFeedback =
+        wordFeedbackTime != null &&
         lastFormedWord != null &&
-        DateTime.now().difference(wordFeedbackTime!) < const Duration(milliseconds: 1500);
+        DateTime.now().difference(wordFeedbackTime!) <
+            const Duration(milliseconds: 1500);
 
     return Stack(
       children: [
@@ -54,10 +56,15 @@ class GameBoard extends StatelessWidget {
         if (showFeedback && lastFormedWord != null && lastWordValid != null)
           Positioned.fill(
             child: Container(
-              color: (lastWordValid! ? Colors.green : Colors.red).withValues(alpha: 0.3),
+              color: (lastWordValid! ? Colors.green : Colors.red).withValues(
+                alpha: 0.3,
+              ),
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
                   decoration: BoxDecoration(
                     color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
