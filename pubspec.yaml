@@ -41,7 +41,7 @@ dependencies:
 
   # Monetization
   google_mobile_ads: ^4.0.0
-  purchases_flutter: ^5.0.0
+  purchases_flutter: ^8.5.2
 
   # Analytics
   firebase_core: ^2.24.0
