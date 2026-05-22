@@ -118,6 +118,10 @@ class _GameBody extends StatelessWidget {
           child: GameBoard(
             board: controller.board,
             onTileTap: controller.handleTileTap,
+            lastFormedWord: controller.lastFormedWord,
+            lastWordValid: controller.lastWordValid,
+            lastWordScore: controller.lastWordScore,
+            wordFeedbackTime: controller.wordFeedbackTime,
           ),
         ),
         // Game over overlay
