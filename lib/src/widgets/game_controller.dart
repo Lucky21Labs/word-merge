@@ -13,21 +13,35 @@ class GameController extends StatefulWidget {
   const GameController({super.key, required this.child});
 
   @override
-  State<GameController> createState() => _GameControllerState();
+  State<GameController> createState() => GameControllerState();
 }
 
-class _GameControllerState extends State<GameController> {
+class GameControllerState extends State<GameController> {
   late BoardState _board;
   late MergeLogic _mergeLogic;
   int _score = 0;
   Position? _selectedPosition;
   bool _isProcessing = false;
+  String? _error;
+
+  // Public getters for UI access
+  BoardState get board => _board;
+  int get score => _score;
+  Position? get selectedPosition => _selectedPosition;
+  bool get isProcessing => _isProcessing;
+  bool get isGameOver => _isGameOver();
 
   @override
   void initState() {
     super.initState();
-    _mergeLogic = MergeLogic();
-    _initializeBoard();
+    try {
+      _mergeLogic = MergeLogic();
+      _initializeBoard();
+    } catch (e, stack) {
+      setState(() {
+        _error = 'Init error: $e\n$stack';
+      });
+    }
   }
 
   void _initializeBoard() {
@@ -47,7 +61,7 @@ class _GameControllerState extends State<GameController> {
     _board = BoardState.fromTiles(initialTiles);
   }
 
-  void _handleTileTap(int row, int column) {
+  void handleTileTap(int row, int column) {
     if (_isProcessing) return;
 
     final tappedPosition = Position(row, column);
@@ -140,8 +154,58 @@ class _GameControllerState extends State<GameController> {
     }
   }
 
+  bool _isGameOver() {
+    if (!_board.isFull) return false;
+    // Check if any adjacent tiles can merge
+    for (var row = 0; row < BoardState.gridSize; row++) {
+      for (var col = 0; col < BoardState.gridSize; col++) {
+        final tile = _board.getTile(row, col);
+        if (tile == null) continue;
+        // Check all 4 directions
+        for (final (dr, dc) in [(1, 0), (-1, 0), (0, 1), (0, -1)]) {
+          final neighbor = _board.getTile(row + dr, col + dc);
+          if (neighbor != null && tile.letter == neighbor.letter) {
+            return false; // Valid merge exists
+          }
+        }
+      }
+    }
+    return true; // Board full, no merges possible
+  }
+
+  void restartGame() {
+    setState(() {
+      _score = 0;
+      _selectedPosition = null;
+      _isProcessing = false;
+      _error = null;
+    });
+    _initializeBoard();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_error != null) {
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  _error!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Column(
       children: [
         // Score display
@@ -153,8 +217,8 @@ class _GameControllerState extends State<GameController> {
               Text(
                 'Score: $_score',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               if (_selectedPosition != null)
                 Container(
@@ -176,8 +240,42 @@ class _GameControllerState extends State<GameController> {
         ),
         // Game board
         Expanded(
-          child: GameBoard(board: _board, onTileTap: _handleTileTap),
+          child: GameBoard(board: _board, onTileTap: handleTileTap),
         ),
+        // Game over overlay
+        if (isGameOver)
+          Container(
+            color: Colors.black54,
+            child: Center(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Game Over!',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Final Score: $_score',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: restartGame,
+                        child: const Text('Play Again'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         // Instructions
         Padding(
           padding: const EdgeInsets.all(16.0),
