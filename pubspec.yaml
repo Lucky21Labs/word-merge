@@ -30,21 +30,39 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+
+  # Game engine
+  flame: ^1.10.0
+  flame_audio: ^2.1.0
+
+  # State management
+  provider: ^6.1.1
+
+  # Monetization
+  google_mobile_ads: ^4.0.0
+  purchases_flutter: ^5.0.0
+
+  # Analytics
+  firebase_core: ^2.24.0
+  firebase_analytics: ^10.8.0
+
+  # Storage
+  shared_preferences: ^2.2.2
+
+  # Localization (required — no hardcoded strings)
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.18.1
+
+  # Social features (Phase 4)
+  games_services: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  build_runner: ^2.4.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -56,6 +74,17 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/images/tiles/
+    - assets/images/backgrounds/forest/
+    - assets/images/backgrounds/ocean/
+    - assets/images/backgrounds/space/
+    - assets/images/backgrounds/desert/
+    - assets/images/backgrounds/candy/
+    - assets/images/ui/
+    - assets/images/splash/
+    - assets/images/particles/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
