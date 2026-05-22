@@ -53,7 +53,7 @@ dependencies:
   # Localization (required — no hardcoded strings)
   flutter_localizations:
     sdk: flutter
-  intl: ^0.18.1
+  intl: ^0.20.2
 
   # Social features (Phase 4)
   games_services: ^4.0.0
